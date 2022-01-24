@@ -40,18 +40,6 @@ public class ServerBlock {
     }
 }
 
-class BlockInstanceCreator extends Block {
-    public String hash;
-    public String previousHash;
-    public String merkleRoot;
-    public ArrayList<Transaction> transactions = new ArrayList<Transaction>(); //our data will be a simple message.
-    public long timeStamp; //as number of milliseconds since 1/1/1970.
-    public int nonce;
-
-    public BlockInstanceCreator(String previousHash) {
-        super(previousHash);
-    }
-}
 
 
 class ServerBlockHandler extends Thread {
@@ -81,7 +69,7 @@ class ServerBlockHandler extends Thread {
                 else {
                     try {
                         Gson gson = new Gson();
-                        Block block = gson.fromJson(retrievedJSON, (Type) new BlockInstanceCreator("0"));
+                        Block block = gson.fromJson(retrievedJSON, Block.class);
                         ControllerGUI.currentBlock = block;
 
 
