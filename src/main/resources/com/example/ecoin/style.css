@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora&display=swap");
+
+.root{
+    -fxbackground-color: "black";
+}
+
+#titleLabel{
+    -fx-font-size: 60;
+    -fx-font-family: 'Sora', sans-serif;
+}
+
+Button{
+    -fx-font-family: 'Sora', sans-serif;
+}
+
+Label{
+    -fx-font-size: 16;
+    -fx-font-family: 'Sora', sans-serif;
+
+}
+
