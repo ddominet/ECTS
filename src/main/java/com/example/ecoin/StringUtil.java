@@ -66,9 +66,9 @@ public class StringUtil {
 		return new GsonBuilder().setPrettyPrinting().create().toJson(o);
 	}
 
-	public static Object getObject(String json) {
+	public static Block getObject(String json) {
 		Gson gson = new Gson();
-		return gson.fromJson(json, Object.class );
+		return gson.fromJson(json, Block.class );
 	}
 	public static HashMap<String, Wallet> getMap(String json){
 		Gson gson = new Gson();

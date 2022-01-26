@@ -15,7 +15,7 @@
       <RowConstraints maxHeight="59.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="59.0" minHeight="0.0" prefHeight="40.0" vgrow="SOMETIMES" />
     <RowConstraints maxHeight="128.0" minHeight="0.0" prefHeight="25.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="184.0" minHeight="0.0" prefHeight="23.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="184.0" minHeight="0.0" prefHeight="23.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <padding>
@@ -28,5 +28,6 @@
       <Label text="monet" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
       <Button fx:id="transferButton" alignment="CENTER" defaultButton="true" onAction="#switchToTransfer" prefHeight="30.0" prefWidth="259.0" text="Zrób przelew" textFill="WHITE" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
       <Button mnemonicParsing="false" onAction="#switchToHome" prefHeight="20.0" prefWidth="80.0" text="Wyloguj" />
+      <Button fx:id="refreshButton" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#refresh" prefHeight="20.0" prefWidth="80.0" text="Odśwież" GridPane.halignment="RIGHT" GridPane.valignment="CENTER" />
    </children>
 </GridPane>

@@ -4,16 +4,16 @@ import java.util.ArrayList;
 
 public class Transaction {
 	
-	public String transactionId; //Contains a hash of transaction*
-	public PublicKey sender; //Senders address/public key.
-	public PublicKey reciepient; //Recipients address/public key.
-	public float value; //Contains the amount we wish to send to the recipient.
-	public byte[] signature; //This is to prevent anybody else from spending funds in our wallet.
+	public String transactionId; // Hash wszystkich transakcji
+	public PublicKey sender; // addres/klucz publiczny wysyłającego
+	public PublicKey reciepient; // addres/klucz publiczny odbiorcy
+	public float value; //Ilość pieniędzy jaką chcemy wysłać
+	public byte[] signature; //Zapobiega przed wydawaniem naszych pieniędzy przez innych (podpis)
 	
 	public ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
 	public ArrayList<TransactionOutput> outputs = new ArrayList<TransactionOutput>();
 	
-	private static int sequence = 0; //A rough count of how many transactions have been generated 
+	private static int sequence = 0; //Ilośc wykonanych transakcji
 	
 	// Constructor: 
 	public Transaction(PublicKey from, PublicKey to, float value,  ArrayList<TransactionInput> inputs) {
@@ -32,13 +32,13 @@ public class Transaction {
 				
 		//Gathers transaction inputs (Making sure they are unspent):
 		for(TransactionInput i : inputs) {
-			i.UTXO = MainChain.UTXOs.get(i.transactionOutputId);
+			i.UTXO = Chain.UTXOs.get(i.transactionOutputId);
 		}
 
 		//Checks if transaction is valid:
-		if(getInputsValue() < MainChain.minimumTransaction) {
+		if(getInputsValue() < Chain.minimumTransaction) {
 			System.out.println("Transaction Inputs too small: " + getInputsValue());
-			System.out.println("Please enter the amount greater than " + MainChain.minimumTransaction);
+			System.out.println("Please enter the amount greater than " + Chain.minimumTransaction);
 			return false;
 		}
 		
@@ -50,13 +50,13 @@ public class Transaction {
 				
 		//Add outputs to Unspent list
 		for(TransactionOutput o : outputs) {
-			MainChain.UTXOs.put(o.id , o);
+			Chain.UTXOs.put(o.id , o);
 		}
 		
 		//Remove transaction inputs from UTXO lists as spent:
 		for(TransactionInput i : inputs) {
 			if(i.UTXO == null) continue; //if Transaction can't be found skip it 
-			MainChain.UTXOs.remove(i.UTXO.id);
+			Chain.UTXOs.remove(i.UTXO.id);
 		}
 		
 		return true;

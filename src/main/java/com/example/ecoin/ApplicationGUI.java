@@ -1,16 +1,17 @@
 package com.example.ecoin;
 
+import com.google.gson.Gson;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import org.json.simple.JSONArray;
+
 
 import java.io.IOException;
 import java.security.Security;
-import java.util.HashMap;
+
 
 public class ApplicationGUI extends Application {
     @Override
@@ -35,25 +36,29 @@ public class ApplicationGUI extends Application {
     public static void main(String[] args) throws IOException {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
-        //Create wallets:
+        //Tworzymy:
         Wallet walletA = new Wallet();
         ControllerGUI.wallets.put(org.apache.commons.codec.digest.DigestUtils.sha256Hex("aaa@bbb.ccc"), walletA);
         Wallet walletB = new Wallet();
         ControllerGUI.wallets.put(org.apache.commons.codec.digest.DigestUtils.sha256Hex("test@test.test"), walletB);
         Wallet coinbase = new Wallet();
 
-        if(MainChain.origin == true){
-            MainChain.genesisTransaction = new Transaction(coinbase.publicKey, ControllerGUI.wallets.get(org.apache.commons.codec.digest.DigestUtils.sha256Hex("aaa@bbb.ccc")).publicKey, 100000f, null);
-            MainChain.genesisTransaction.generateSignature(coinbase.privateKey);	 //manually sign the genesis transaction
-            MainChain.genesisTransaction.transactionId = "0"; //manually set the transaction id
-            MainChain.genesisTransaction.outputs.add(new TransactionOutput(MainChain.genesisTransaction.reciepient, MainChain.genesisTransaction.value, MainChain.genesisTransaction.transactionId)); //manually add the Transactions Output
-            MainChain.UTXOs.put(MainChain.genesisTransaction.outputs.get(0).id, MainChain.genesisTransaction.outputs.get(0));
+        if(Chain.origin == true){
+
+            // Tworzymy genesis transaction
+            Chain.genesisTransaction = new Transaction(coinbase.publicKey, ControllerGUI.wallets.get(org.apache.commons.codec.digest.DigestUtils.sha256Hex("aaa@bbb.ccc")).publicKey, 100000f, null);
+            Chain.genesisTransaction.generateSignature(coinbase.privateKey);	 //manually sign the genesis transaction
+            Chain.genesisTransaction.transactionId = "0"; //manually set the transaction id
+            Chain.genesisTransaction.outputs.add(new TransactionOutput(Chain.genesisTransaction.reciepient, Chain.genesisTransaction.value, Chain.genesisTransaction.transactionId)); //manually add the Transactions Output
+            Chain.UTXOs.put(Chain.genesisTransaction.outputs.get(0).id, Chain.genesisTransaction.outputs.get(0));
             System.out.println("Creating and Mining Genesis block... ");
             Block genesis = new Block("0");
             ControllerGUI.currentBlock = genesis;
-            genesis.addTransaction(MainChain.genesisTransaction);
-            MainChain.addBlock(genesis);
-            MainChain.isChainValid();//its important to store our first transaction in the UTXOs list.
+            genesis.addTransaction(Chain.genesisTransaction);
+            Chain.addBlock(genesis);
+            Chain.isChainValid();//przechowujemy pierwszą transakcję w liście UTXO
+
+
         }
 
 
@@ -71,26 +76,6 @@ public class ApplicationGUI extends Application {
 
         MapSender mapsender = new MapSender();
         mapsender.start();
-
-
-
-
-
-/*
-        System.out.println(StringUtil.getJson(walletA));
-        System.out.println("HEREEE______________________________________________");
-        Wallet currwallet = ControllerGUI.wallets.get(org.apache.commons.codec.digest.DigestUtils.sha256Hex("aaa@bbb.ccc"));
-        System.out.println(StringUtil.getJson(currwallet));
-        System.out.println("HEREEE______________________________________________");
-        String json = StringUtil.getJson(ControllerGUI.wallets);
-        HashMap<String, Wallet> test_json = StringUtil.getMap(json);
-        System.out.println("HERE BE DRAGONS");
-        System.out.println((Block) StringUtil.getObject(json));
-
-*/
-
-
-
 
 
 

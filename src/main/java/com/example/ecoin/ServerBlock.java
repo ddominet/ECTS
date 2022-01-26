@@ -1,19 +1,21 @@
 package com.example.ecoin;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import flexjson.JSONDeserializer;
+import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.lang.reflect.Type;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.Map;
 
 
 public class ServerBlock {
     public void begin(int port) throws IOException {
-
 
 
         ServerSocket ss = new ServerSocket(port);
@@ -22,6 +24,7 @@ public class ServerBlock {
             Socket s = null;
             try
             {
+
                 s = ss.accept();
                 System.out.println("A new client is connected : " + s);
                 InputStream inputStream = s.getInputStream();
@@ -44,13 +47,13 @@ public class ServerBlock {
 
 class ServerBlockHandler extends Thread {
 
-    final InputStream inputStream;
-    final Socket s;
+    final InputStream inStrm;
+    final Socket socks;
 
-    public ServerBlockHandler(Socket s, InputStream inputStream)
+    public ServerBlockHandler(Socket socks, InputStream inStrm)
     {
-        this.s = s;
-        this.inputStream = inputStream;
+        this.socks = socks;
+        this.inStrm = inStrm;
     }
 
 
@@ -59,19 +62,23 @@ class ServerBlockHandler extends Thread {
         while (true) {
             try {
                 String encd = "UTF-8";
-                JSONReader rdr = new JSONPacketReader(new ObjectInputStream(inputStream), encd);
-                String retrievedJSON = rdr.read();
-                rdr.close();
-                System.out.println("Retrieved XML: " + retrievedJSON);
-                if(retrievedJSON == null){
+                JSONReader readder = new JSONPacketReader(new ObjectInputStream(inStrm), encd);
+                String retrievedJSON1 = readder.read();
+                readder.close();
+                System.out.println("Retrieved XML: " + retrievedJSON1);
+                if(retrievedJSON1 == null){
                     break;
                 }
                 else {
                     try {
-                        Gson gson = new Gson();
-                        Block block = gson.fromJson(retrievedJSON, Block.class);
-                        ControllerGUI.currentBlock = block;
+                        if(socks.getLocalPort() == 8888){
+                            Block test = StringUtil.getObject(retrievedJSON1);
 
+
+                            System.out.println("START" + test + "STOP");
+
+
+                        }
 
                     } catch (Exception e) {
                         System.out.println("ERROR CHECK SERVERBLOCK");
@@ -87,7 +94,7 @@ class ServerBlockHandler extends Thread {
             }
         }
         try {
-            this.inputStream.close();
+            this.inStrm.close();
 
         } catch (IOException e) {
             e.printStackTrace();

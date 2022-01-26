@@ -38,13 +38,13 @@ public class ClientBlock extends Thread{
 }
 class ClientBlockHandler extends Thread {
 
-    final OutputStream outputStream;
+    final OutputStream outstrm;
     final Socket s;
     final String json;
 
-    public ClientBlockHandler(Socket s, OutputStream outputStream, String json) {
+    public ClientBlockHandler(Socket s, OutputStream outstrm, String json) {
         this.s = s;
-        this.outputStream = outputStream;
+        this.outstrm = outstrm;
         this.json = json;
     }
 
@@ -56,9 +56,9 @@ class ClientBlockHandler extends Thread {
                 String encd = "UTF-8";
                 System.out.println(json.getBytes("UTF-8").length);
 
-                JSONWriter wrtr = new JSONPacketWriter(new ObjectOutputStream(outputStream), encd);
-                wrtr.write(json);
-                wrtr.close();
+                JSONWriter wrtter = new JSONPacketWriter(new ObjectOutputStream(outstrm), encd);
+                wrtter.write(json);
+                wrtter.close();
                 break;
 
 

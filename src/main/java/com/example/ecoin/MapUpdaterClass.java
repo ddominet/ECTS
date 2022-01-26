@@ -1,7 +1,6 @@
 package com.example.ecoin;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 public class MapUpdaterClass extends Thread {
     public void run(){

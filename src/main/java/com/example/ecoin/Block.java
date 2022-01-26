@@ -3,58 +3,53 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Block {
-	
+
 	public String hash;
-	public String previousHash; 
+	public String previousHash;
 	public String merkleRoot;
-	public ArrayList<Transaction> transactions = new ArrayList<Transaction>(); //our data will be a simple message.
+	public ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 	public long timeStamp; //as number of milliseconds since 1/1/1970.
 	public int nonce;
-	
-	//Block Constructor.  
+
 	public Block(String previousHash ) {
 		this.previousHash = previousHash;
 		this.timeStamp = new Date().getTime();
-		
-		this.hash = calculateHash(); //Making sure we do this after we set the other values.
+		this.hash = calculateHash();
 	}
-	
-	//Calculate new hash based on blocks contents
+
+	// Calculate a hash for a block
 	public String calculateHash() {
-		String calculatedhash = StringUtil.applySha256( 
-				previousHash +
-				Long.toString(timeStamp) +
-				Integer.toString(nonce) + 
-				merkleRoot
-				);
-		return calculatedhash;
+		String hash = StringUtil.applySha256(previousHash + Long.toString(timeStamp) + Integer.toString(nonce) + merkleRoot);
+		return hash;
 	}
-	
-	//Increases nonce value until hash target is reached.
+
+	// Increases nonce value until hash target is reached.
 	public void mineBlock(int difficulty) {
 		merkleRoot = StringUtil.getMerkleRoot(transactions);
-		String target = StringUtil.getDificultyString(difficulty); //Create a string with difficulty * "0" 
+		String target = StringUtil.getDificultyString(difficulty);
 		while(!hash.substring( 0, difficulty).equals(target)) {
 			nonce ++;
 			hash = calculateHash();
 		}
-		System.out.println("Block Mined!!! : " + hash);
+		System.out.println("Block " + hash + " mined." );
 	}
-	
-	//Add transactions to this block
+
+	// Add transactions to the Block
 	public boolean addTransaction(Transaction transaction) {
-		//process transaction and check if valid, unless block is genesis block then ignore.
-		if(transaction == null) return false;		
+		// Check if transaction is valid with special exception for genesis Block.
+		if(transaction == null) {
+			return false;
+		}
 		if((!"0".equals(previousHash))) {
 			if((transaction.processTransaction() != true)) {
-				System.out.println("Transaction failed to process. Discarded.");
+				System.out.println("Transaction failed.");
 				return false;
 			}
 		}
 
 		transactions.add(transaction);
-		System.out.println("Transaction Successfully added to Block");
+		System.out.println("Transaction added to Block");
 		return true;
 	}
-	
+
 }

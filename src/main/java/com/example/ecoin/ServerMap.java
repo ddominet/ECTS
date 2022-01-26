@@ -24,7 +24,7 @@ public class ServerMap {
                 InputStream inputStream = s.getInputStream();
 
                 System.out.println("Assigning new thread for this client");
-                Thread t = new ServerBlockHandler(s, inputStream);
+                Thread t = new ServerMapHandler(s, inputStream);
                 t.start();
 
 
@@ -61,20 +61,16 @@ class ServerMapHandler extends Thread {
                 System.out.println("Retrieved XML: " + retrievedJSON);
                 try {
                     if(retrievedJSON == null){
+                        System.out.println("Recieved NULL");
                         break;
                     }
                     else{
                         HashMap<String,Wallet> recieved = StringUtil.getMap(retrievedJSON);
-                        if(recieved.size() > ControllerGUI.wallets.size()){
-                            System.out.println("Recieved superior wallets! UPDATING");
-                            ControllerGUI.wallets = recieved;
-                        }
-                        else if (ControllerGUI.wallets.size() == recieved.size()){
-                            System.out.println("Recieved equal wallets KEEPING");
-                        }
-                        else {
-                            System.out.println("UNKNOWN!!! Check ServerMap");
-                        }
+                        System.out.println("Recieved MAP!!");
+                        System.out.println(recieved);
+                        System.out.println(recieved.get(org.apache.commons.codec.digest.DigestUtils.sha256Hex("aaa@bbb.ccc")).publicKey);
+
+
                     }
                 } catch (Exception e) {
                     System.out.println("ERROR CHECK SERVERMAP");

@@ -41,8 +41,6 @@ public class ControllerGUI {
 
     public static HashMap<String, Wallet> wallets = new HashMap<String, Wallet>();
 
-    //TODO: transfer method
-
     @FXML
     public void register(ActionEvent event) throws SQLException, IOException {
 
@@ -70,7 +68,7 @@ public class ControllerGUI {
 
         if (EMAIL_REGEX.matcher(emailIdField.getText()).find() == false){
             showInfo(Alert.AlertType.ERROR, owner, "Błąd formularza!", "Nieprawidłowy format adresu email.");
-          return;
+            return;
         }
 
         String fullName = nameField.getText();
@@ -81,8 +79,8 @@ public class ControllerGUI {
         Wallet wallet = new Wallet();
         wallets.put(org.apache.commons.codec.digest.DigestUtils.sha256Hex(emailId), wallet);
 
-        JdbcDao jdbcDao = new JdbcDao();
-        jdbcDao.insert(fullName, emailId, password);
+        DataBaseConnector dbConnector = new DataBaseConnector();
+        dbConnector.insert(fullName, emailId, password);
 
         showInfo(Alert.AlertType.CONFIRMATION, owner, "Gratulacje! Rejestracja zakończona pomyślnie.", "Aby uzyskać dostęp do swojego konta zaloguj się. ");
 
@@ -112,8 +110,8 @@ public class ControllerGUI {
         String emailId = emailFieldSI.getText();
         String password = passwordFieldSI.getText();
 
-        JdbcDao jdbcDao = new JdbcDao();
-        boolean flag = jdbcDao.validate(emailId, password);
+        DataBaseConnector dbConnector = new DataBaseConnector();
+        boolean flag = dbConnector.validate(emailId, password);
 
         if (!flag) {
             showInfo(Alert.AlertType.ERROR, owner, "Nieprawidłowe dane", "Spróbuj wprowadzić swoje dane ponownie.");
@@ -176,8 +174,8 @@ public class ControllerGUI {
         Block block = new Block(ControllerGUI.currentBlock.hash);
         ControllerGUI.currentBlock = block;
         block.addTransaction(currentWallet.sendFunds(recipientWallet.publicKey, Float.parseFloat(amount)));
-        MainChain.addBlock(block);
-        MainChain.isChainValid();
+        Chain.addBlock(block);
+        Chain.isChainValid();
 
         FXMLLoader fxmlLoader = new FXMLLoader(ApplicationGUI.class.getResource("panel.fxml"));
         root = fxmlLoader.load();
