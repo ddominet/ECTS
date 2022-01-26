@@ -15,7 +15,7 @@ public class ClientMap extends Thread{
                 OutputStream outputStream = s.getOutputStream();
                 if(ControllerGUI.wallets != null){
                     System.out.println("Assigning new thread for this client");
-                    Thread t = new ClientBlockHandler(s, outputStream, json);
+                    Thread t = new ClientMapHandler(s, outputStream, json);
                     t.start();
                 }
                 try {
